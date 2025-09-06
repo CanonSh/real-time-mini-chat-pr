@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../repositories/firebase/config'
+import { useNavigate } from "react-router"
 
 const schema = yup.object({
   email: yup.string().email("Porfavor ingrese un formato: email@email.com").required(),
@@ -16,6 +17,7 @@ const schema = yup.object({
 
 
 export const RegisterComponent = () => {
+  const navigate= useNavigate()
  const {register,handleSubmit,formState:{errors}} = useForm({
     resolver: yupResolver(schema)
  })
@@ -26,16 +28,16 @@ export const RegisterComponent = () => {
     createUserWithEmailAndPassword(auth, data.email, data.password)
   .then((userCredential) => {
     // Signed up 
-    const user = userCredential.user;
-    console.log(user);
-  
+    //const user = userCredential.user;
     alert('Usuario registrado con exito')
+    navigate("/")
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     console.error(errorCode);
     console.log(errorMessage);
+    alert("Ocurrio un erro, por favor intente mas tarde")
     
     // ..
   });

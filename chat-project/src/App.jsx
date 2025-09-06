@@ -6,7 +6,6 @@ import { AuthContextProvider } from './contexts/AuthContextProvider'
 import { Inicio } from './views/inicio/Inicio'
 import { Chat } from './views/chat/Chat'
 function App() {
-    const sala="hola bb"
 
   return (
     <>
