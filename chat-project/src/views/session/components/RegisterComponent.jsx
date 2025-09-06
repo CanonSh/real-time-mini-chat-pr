@@ -1,13 +1,14 @@
 import {useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth'
 import { auth } from '../../../repositories/firebase/config'
 import { useNavigate } from "react-router"
 
 const schema = yup.object({
   email: yup.string().email("Porfavor ingrese un formato: email@email.com").required(),
-  password: yup.string().required().min(8,"Please enter a min 8 char")
+  username:yup.string().required().min(3,"El nombre de usuario debe tener almenos 3 caracteres"),
+  password: yup.string().required().min(8,"Porfavor ingrese minimo 8 caracteres")
   .matches(/[A-Z]/,'Porfavor ingrese 1 letra en Mayuscula')
   .matches(/[a-z]/,'Porfavor ingrese 1 letra en Minuscula')
   .matches(/[0-9]/,'Porfavor ingrese 1 numero')
@@ -25,10 +26,13 @@ export const RegisterComponent = () => {
   const onSubmitForm = (data) => {
     console.log(data);
     
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-  .then((userCredential) => {
+  createUserWithEmailAndPassword(auth, data.email, data.password)
+  .then(async(userCredential) => {
     // Signed up 
-    //const user = userCredential.user;
+    const user = userCredential.user;
+      await updateProfile(user, {
+        displayName: data.username
+      });
     alert('Usuario registrado con exito')
     navigate("/")
   })
@@ -51,6 +55,9 @@ export const RegisterComponent = () => {
       <label className="form-label" >Email: </label>
       <input type="email" className="form-control" name="input_email" {...register('email')} />
       <p className='text-danger'>{errors.email && errors.email.message }</p>
+      <label className="form-label" >Nombre Usuario: </label>
+      <input type="text" className="form-control" name="input_username" {...register('username')} />
+      <p className='text-danger'>{errors.username && errors.username.message }</p>
       <label className="form-label">Password: </label>
       <input type="password" className="form-control" name="input_password" {...register('password')}/>
       <p className='text-danger'>{errors.password && errors.password.message }</p>
