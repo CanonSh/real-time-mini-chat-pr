@@ -1,11 +1,16 @@
 import { useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
+import { useState } from "react"
 
 export const Inicio = () => {
     const {register,handleSubmit}=useForm()
     const navigate=useNavigate()
-
+    const [isEmpty,setIsEmpty]=useState();
     const onSubmitForm =(data)=>{
+        if (!data.codigo || data.codigo.trim() === ""){
+            setIsEmpty(true)           
+            return
+        } 
         console.log(data.codigo)
         navigate(`/chat/${data.codigo}`)
     }
@@ -17,6 +22,7 @@ export const Inicio = () => {
         <form className="form-group" onSubmit={handleSubmit(onSubmitForm)}>
             <label className="form-label">Ingresa un codigo de sala:</label>
             <input className="form-control" type="text" placeholder="Escribe un codigo de sala" {...register('codigo')}/>
+            {isEmpty ? <p className="text-danger">ingresa un codigo</p>:null}
             <button className="btn btn-primary mt-2">Entrar Sala</button>
         </form>
       </section>
