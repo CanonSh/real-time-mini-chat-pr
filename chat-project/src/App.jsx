@@ -16,7 +16,7 @@ function App() {
     <Routes>
       <Route path='/session' element={<SessionView />} />
       <Route path='/' element={<Inicio/>} />
-      <Route path='/chat' element={<Chat sala={sala}/>}/>
+      <Route path='/chat/:codigoSala' element={<Chat/>}/>
     </Routes>
     </BrowserRouter>
     </AuthContextProvider>
